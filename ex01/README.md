@@ -1,25 +1,37 @@
+---
+pdf-engine: xelatex
+monofont: "DejaVu Sans Mono"
+geometry: "top=1.5cm,bottom=1.5cm,left=2cm,right=2cm"
+---
+
 # Exercice ex01 :  L'INTRICATION QUANTIQUE (ÉTAT DE BELL)
 
 ## Sujet : 
-Écrivez un programme qui produira un circuit quantique avec deux qubits afin d'obtenir cet état $\frac{1}{\sqrt{2}}(|0.0\rangle + |1.1\rangle)$ en utilisant le principe de superposition et d'intrication quantique.
+
+Écrivez un programme qui produira un circuit quantique avec deux qubits afin d'obtenir cet état $\frac{1}{\sqrt{2}}(\lvert0.0\rangle + \lvert1.1\rangle)$ en utilisant le principe de superposition et d'intrication quantique.
 
 ## Analyse:
-L'état quantique $|\psi\rangle$ appelé **2-qubit** est la réunion de 2 qubit  et est défini par la superposition : 
+
+L'état quantique $\lvert\psi\rangle$ appelé **2-qubit** est la réunion de 2 qubit  et est défini par la superposition : 
 $$
-|\psi\rangle = \alpha|0.0\rangle + \beta|0.1\rangle + \gamma|1.0\rangle + \delta|1.1\rangle~~~~(1)
+\lvert\psi\rangle = \alpha\lvert0.0\rangle + \beta\lvert0.1\rangle + \gamma\lvert1.0\rangle + \delta\lvert1.1\rangle~~~~(1)
 $$
 avec $\alpha,\beta,\gamma,\delta \in \mathbb{C}$
 
-$|\psi\rangle$ à par convention une **norme** égale à **1** donc : 
+$\lvert\psi\rangle$ à par convention une **norme** égale à **1** donc : 
 
 $$
 |\alpha|^2 + |\beta|^2 + |\gamma|^2 + |\delta|^2 = 1
 $$
 
 La mesure d'un 2-qubit, donne 2 bits classique:
+
 - [0.0] avec une probabilité $|\alpha|^2$.
+
 - [0.1] avec une probabilité $|\beta|^2$.
+
 - [1.0] avec une probabilité $|\gamma|^2$.
+
 - [1.1] avec une probabilité $|\delta|^2$.
 
 Pour l'état demandé dans le sujet, on a:
@@ -35,9 +47,13 @@ $$
 Donc $|\psi\rangle$ s'écrit bien comme $(1)$ avec $\alpha = \frac{1}{\sqrt{2}}$, $\beta = 0$, $\gamma = 0$ et $\delta = \frac{1}{\sqrt{2}}$
 
 La mesure de ce 2-qubit donne:
+
 - [0.0] avec une probabilité $|\alpha|^2 = |\frac{1}{\sqrt{2}}|^2 = \frac{1}{2}$.
+
 - [0.1] avec une probabilité $|\beta|^2$ = 0.
+
 - [1.0] avec une probabilité $|\gamma|^2$ = 0.
+
 - [1.1] avec une probabilité $|\delta|^2| = |\frac{1}{\sqrt{2}}|^2 = \frac{1}{2}$.
 
 On a aucune chance d'avoir [0.1] ou [1.0] et une chance sur 2 d'avoir [0.0] ou [1.1]
@@ -69,8 +85,11 @@ Le principe de cette porte est de changer le second qubit en fonction de l'état
  |0> ───⊕──> |0>   |1> ───⊕──> |1>   |0> ───⊕──> |1>   |1> ───⊕──> |0> 
 ```
 On notera :
+
 - Le premier qubit ne change jamais
+
 - Si le premier qubit est $|0\rangle$, le second ne varie pas.
+
 - Si le premier qubit est $|1\rangle$, alors le second qubit change par une porte **X** : $|0\rangle \to |1\rangle$ et $|1\rangle \to |0\rangle$ 
 
 ## Solution

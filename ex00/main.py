@@ -20,6 +20,7 @@ circuit.measure(0, 0)
 # 6. Affichage du circuit
 print("\n[1] Visualisation du circuit à l'état initial:")
 print(circuit.draw(output='text', initial_state=True, cregbundle=False))
+circuit.draw(output='mpl', initial_state=True, fold=-1).show()
 
 input("Appuyez sur Entrée pour lancer la simulation quantique...")
 

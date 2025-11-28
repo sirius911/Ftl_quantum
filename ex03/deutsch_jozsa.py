@@ -2,8 +2,7 @@ import matplotlib.pyplot as plt
 import qiskit
 from qiskit import QuantumCircuit
 from qiskit_aer import QasmSimulator
-# Importation de l'interface et des Oracles de test
-from Oracle import Base_Oracle, ConstantOracle1, BalancedOracleX0
+from Oracle import Base_Oracle
 
 
 def dessine_circuit(qc, n_qubits, name):
@@ -100,7 +99,6 @@ def run_deutsch_jozsa(oracle_obj):
     return conclusion
 
 
-# --- Exécution du programme de test ---
 if __name__ == "__main__":
 
     # --- Test 1 : Oracle Simple ---
@@ -113,6 +111,7 @@ if __name__ == "__main__":
         print(f"Erreur lors de l'exécution du test 1: {e}")
 
     # --- Test 2 : Oracle Balancé (f(x)=x_0) ---
+    from Oracle import BalancedOracleX0
     try:
         balanced_oracle_test = BalancedOracleX0()
         print(f"\n--- TEST 2: Oracle Balancé (N={balanced_oracle_test.n_qubits}) ---")
@@ -121,6 +120,7 @@ if __name__ == "__main__":
         print(f"Erreur lors de l'exécution du test 2: {e}")
 
     # --- Test 3 : Oracle Constant (f(x)=1) ---
+    from Oracle import ConstantOracle1
     try:
         constant_oracle_test = ConstantOracle1()
         print(f"\n--- TEST 1: Oracle Constant (N={constant_oracle_test.n_qubits}) ---")
@@ -128,7 +128,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Erreur lors de l'exécution du test 1: {e}")
 
-    # --------------------------------------------------------------------------------
-    # Pour l'évaluation, le correcteur remplacera simplement la ligne ci-dessus par
-    # un autre Oracle comme : secret_oracle = MySecretOracle(N_QUBITS)
-    # --------------------------------------------------------------------------------
+    # --- Test 4 : Oracle Correcteur ---
