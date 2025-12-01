@@ -1,21 +1,16 @@
-import matplotlib.pyplot as plt
+from pathlib import Path
+import sys
 import qiskit
 from qiskit import QuantumCircuit
 from qiskit_aer import QasmSimulator
+from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
+from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 from Oracle import Base_Oracle
+# Ajouter le dossier parent (projet/) au PYTHONPATH
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR))
 
-
-def dessine_circuit(qc, n_qubits, name):
-    try:
-        circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {name}"
-
-        figure = qc.draw(output='mpl', initial_state=True, fold=-1)
-        figure.suptitle(circuit_title, fontsize=14)
-        plt.show()
-
-    except ImportError:
-        print("Matplotlib non installé. Affichage textuel du circuit :")
-        print(qc.draw(output='text', fold=-1))
+from utils.results_utils import afficher_resultats, dessine_circuit
 
 
 def run_deutsch_jozsa(oracle_obj):
@@ -62,17 +57,73 @@ def run_deutsch_jozsa(oracle_obj):
     # 5. Affichage du circuit total
     print("\nVisualisation du circuit complet:")
     # print(qc.draw(output='text', initial_state=True, fold=-1))
-    dessine_circuit(qc, n_qubits, oracle_obj.name)
+    circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {oracle_obj.name}"
+    dessine_circuit(qc=qc,
+                    n_qubits=n_qubits,
+                    title=circuit_title,
+                    save=None)
 
-    input("Appuyez sur Entrée pour lancer la simulation quantique...")
+    if input("Appuyez sur Entrée pour lancer la simulation quantique "
+             "ou Quantique pour envoyer au serveur quantique...") != "Quantique":
 
-    # --- SIMULATION ---
-    simulator = QasmSimulator()
-    compiled_circuit = qiskit.transpile(qc, simulator)
-    job = simulator.run(compiled_circuit, shots=1)  # Un seul tir suffit pour DJ
+        # --- SIMULATION ---
+        backend_name = "Simulation locale (QasmSimulator)"
+        simulator = QasmSimulator()
+        compiled_circuit = qiskit.transpile(qc, simulator)
+        job = simulator.run(compiled_circuit, shots=1)  # Un seul tir suffit pour DJ
+        result = job.result()
+        counts = result.get_counts(qc)
+    else:
+        # --- EXÉCUTION SUR LE VRAI QPU ---
+        # 1. Connexion et choix du Backend
+        try:
+            service = QiskitRuntimeService()
+            backend = service.least_busy(simulator=False, operational=True)
 
-    result = job.result()
-    counts = result.get_counts(qc)
+            if backend is None:
+                print("❌ Aucune machine quantique réelle n'est disponible pour le moment.")
+                return
+
+            backend_name = backend.name
+
+        except Exception as e:
+            print("❌ ERREUR : La connexion au backend a échoué. Assurez-vous que le 'setup_ibm.py' a réussi.")
+            print(f"Détail : {e}")
+            return
+
+        # Transpilation (Adaptation à la machine)
+        pm = generate_preset_pass_manager(optimization_level=1, backend=backend)
+
+        compiled_circuit = pm.run(qc)
+        # Soumission du Job via la Session
+        print(f"\nJob Sampler soumis à {backend_name} avec 1 tir (mode job, sans Session).")
+        print("ATTENTION : Cette étape met le job en file d'attente (peut prendre du temps).")
+
+        sampler = Sampler(mode=backend)
+        # On fixe le nombre de tirs par défaut
+        sampler.options.default_shots = 1
+
+        # Soumission du job au vrai QPU
+        job = sampler.run([compiled_circuit])
+        ident_job = job.job_id()
+        print(f"ID du Job: {ident_job}")
+        print(f"Statut : {job.status()}")
+        print("\n--- ATTENTE DES RÉSULTATS (Ctrl + C pour passer)---")
+        try:
+            result = job.result()
+        except KeyboardInterrupt:
+            print("❌ Attente interrompue. \n"
+                  f"Vous pourrez récupérer les résultats plus tard avec 'read_result.py {ident_job}'")
+            circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {oracle_obj.name}"
+            file_name = f"job/{ident_job}.png"
+            dessine_circuit(qc=qc,
+                            n_qubits=n_qubits,
+                            title=circuit_title,
+                            save=file_name)
+            return
+        pub_result = result[0]
+        bitarray = pub_result.data.c
+        counts = bitarray.get_counts()
 
     print("\nCounts bruts :")
     print(counts)
@@ -96,6 +147,12 @@ def run_deutsch_jozsa(oracle_obj):
     print(f"Mesure du registre |x> : {list(counts.keys())[0]}")
     print(f"✅ CONCLUSION: L'Oracle est {conclusion}.")
 
+    afficher_resultats(
+            counts,
+            backend_name=backend_name,
+            titre=f"Résultats : {conclusion}",
+            afficher_graphique=True
+        )
     return conclusion
 
 
@@ -105,7 +162,7 @@ if __name__ == "__main__":
     from Oracle import Simple_Oracle
     try:
         oracle_simple = Simple_Oracle()
-        print(f"\n--- TEST 2: Oracle Simple (N={oracle_simple.n_qubits}) ---")
+        print(f"\n--- TEST 1: Oracle Simple (N={oracle_simple.n_qubits}) ---")
         run_deutsch_jozsa(oracle_simple)
     except Exception as e:
         print(f"Erreur lors de l'exécution du test 1: {e}")
@@ -123,7 +180,7 @@ if __name__ == "__main__":
     from Oracle import ConstantOracle1
     try:
         constant_oracle_test = ConstantOracle1()
-        print(f"\n--- TEST 1: Oracle Constant (N={constant_oracle_test.n_qubits}) ---")
+        print(f"\n--- TEST 3: Oracle Constant (N={constant_oracle_test.n_qubits}) ---")
         run_deutsch_jozsa(constant_oracle_test)
     except Exception as e:
         print(f"Erreur lors de l'exécution du test 1: {e}")

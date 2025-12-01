@@ -1,8 +1,13 @@
+import sys
 import qiskit
 from qiskit_ibm_runtime import QiskitRuntimeService, Sampler
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
 
-from results_utils import afficher_resultats
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR))
+
+from utils.results_utils import afficher_resultats
 
 SHOTS = 1024
 

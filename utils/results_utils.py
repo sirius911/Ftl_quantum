@@ -1,8 +1,8 @@
 # results_utils.py
 from collections import OrderedDict
 from typing import Dict, Iterable, List, Optional
-
 import matplotlib.pyplot as plt
+from qiskit import QuantumCircuit
 
 
 def _trier_labels_binaires(labels: Iterable[str]) -> List[str]:
@@ -77,9 +77,63 @@ def afficher_resultats(
 
         # Affiche les valeurs en % au-dessus de chaque barre
         for x, v in zip(x_positions, values):
-            ax.text(x, v + 0.01, f"{v*100:.1f}%", ha="center", va="bottom")
+            texte = f"{v*100:.1f}%"
+
+            if v >= 0.999:  # ~ 100%
+                # texte au milieu de la barre
+                ax.text(
+                    x,
+                    v / 2,          # milieu de la barre
+                    texte,
+                    ha="center",
+                    va="center",
+                    color="white",   # optionnel: lisible sur fond bleu
+                    fontweight="bold",
+                )
+            else:
+                # cas normal : un peu au-dessus de la barre
+                ax.text(
+                    x,
+                    v + 0.01,
+                    texte,
+                    ha="center",
+                    va="bottom",
+                )
 
         plt.tight_layout()
         plt.show()
 
     return probabilities
+
+
+def dessine_circuit(qc: QuantumCircuit, n_qubits, title, save=None):
+    """
+    Affiche le circuit quantique et le sauvegarde si un nom de fichier est fourni.
+
+    :param qc: Le circuit Qiskit à dessiner.
+    :param n_qubits: Le nombre de qubits de données.
+    :param name: Le nom de l'Oracle pour le titre.
+    :param save: Le nom du fichier pour la sauvegarde (ex: 'dj_circuit.png'). 
+                 Si None, seule l'affichage est effectué.
+    """
+    try:
+
+        # 1. Générer la figure Matplotlib
+        figure = qc.draw(output='mpl', initial_state=True, fold=-1)
+        figure.suptitle(title, fontsize=14)
+        plt.show()
+
+        # 2. Sauvegarder la figure si 'save' est spécifié
+        if save is not None:
+            # Utilisez bbox_inches='tight' pour éviter que le titre ou les étiquettes ne soient coupés
+            figure.savefig(save, bbox_inches='tight')
+            print(f"✅ Circuit sauvegardé sous : {save}")
+
+    except ImportError:
+        # Fallback si Matplotlib n'est pas installé
+        print("Matplotlib non installé. Affichage textuel du circuit :")
+        print(qc.draw(output='text', fold=-1))
+
+    except Exception as e:
+        # Gérer les autres erreurs (ex: chemin invalide pour la sauvegarde)
+        print(f"❌ Erreur lors de l'affichage/sauvegarde du circuit : {e}")
