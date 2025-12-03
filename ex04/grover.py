@@ -46,7 +46,7 @@ def build_diffuser(n_qubits: int) -> QuantumCircuit:
     # 3. H^n final
     qc.h(range(n_qubits))
     print(qc.draw(output='text', initial_state=True, cregbundle=False))
-    dessine_circuit(qc, n_qubits, "Diffuseur de Grover")
+    dessine_circuit(qc, "Diffuseur de Grover")
 
     return qc.to_instruction()
 
@@ -99,7 +99,7 @@ def run_grover_search(oracle_obj: Base_Grover_Oracle, backend_name: str = 'simul
 
     # Affichage du circuit (comme dans deutsch_jozsa.py)
     title = f"Algorithme de Grover (n={n_qubits}) | {oracle_obj.name}"
-    dessine_circuit(qc, n_qubits, title=title, save=None)
+    dessine_circuit(qc, title=title, save=None)
 
     qc_transpiled = transpile(qc, basis_gates=['u', 'cx', 'id', 'measure'])
 
@@ -148,7 +148,6 @@ def run_grover_search(oracle_obj: Base_Grover_Oracle, backend_name: str = 'simul
             circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {oracle_obj.name}"
             file_name = f"job/{ident_job}.png"
             dessine_circuit(qc=qc,
-                            n_qubits=n_qubits,
                             title=circuit_title,
                             save=file_name)
             return

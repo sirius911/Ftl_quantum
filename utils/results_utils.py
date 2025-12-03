@@ -106,12 +106,11 @@ def afficher_resultats(
     return probabilities
 
 
-def dessine_circuit(qc: QuantumCircuit, n_qubits, title, save=None):
+def dessine_circuit(qc: QuantumCircuit, title, save=None):
     """
     Affiche le circuit quantique et le sauvegarde si un nom de fichier est fourni.
 
     :param qc: Le circuit Qiskit à dessiner.
-    :param n_qubits: Le nombre de qubits de données.
     :param name: Le nom de l'Oracle pour le titre.
     :param save: Le nom du fichier pour la sauvegarde (ex: 'dj_circuit.png'). 
                  Si None, seule l'affichage est effectué.

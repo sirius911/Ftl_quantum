@@ -59,7 +59,6 @@ def run_deutsch_jozsa(oracle_obj):
     # print(qc.draw(output='text', initial_state=True, fold=-1))
     circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {oracle_obj.name}"
     dessine_circuit(qc=qc,
-                    n_qubits=n_qubits,
                     title=circuit_title,
                     save=None)
 
@@ -117,7 +116,6 @@ def run_deutsch_jozsa(oracle_obj):
             circuit_title = f"Deutsch-Jozsa (n={n_qubits}) | Oracle: {oracle_obj.name}"
             file_name = f"job/{ident_job}.png"
             dessine_circuit(qc=qc,
-                            n_qubits=n_qubits,
                             title=circuit_title,
                             save=file_name)
             return
