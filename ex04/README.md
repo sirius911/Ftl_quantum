@@ -1,3 +1,9 @@
+---
+pdf-engine: xelatex
+monofont: "DejaVu Sans Mono"
+geometry: "top=1.5cm,bottom=1.5cm,left=2cm,right=2cm"
+---
+
 # Algorithme de Recherche Quantique de Grover (Exo 04)
 
 L'algorithme de Grover est le deuxième algorithme quantique majeur qui démontre l'avantage des ordinateurs quantiques sur leurs homologues classiques. Il permet de trouver l'unique élément solution ($\omega$) dans une liste non triée de $N$ éléments avec une complexité en $\mathcal{O}(\sqrt{N})$, contre $\mathcal{O}(N)$ pour la méthode classique.
@@ -27,8 +33,9 @@ On recherche le rang de l'état $[1,0,1]$.
 **Figure (b)**. On rend le coefficient du rang qui nous intéresse négatif.
 
 Pour cela on va appliquer une Fonction $f$ définie par : 
-Soit $N$ un entier fixé et soit $k_0$ un entier avec $0 ⩽ k_0 ⩽ N − 1$. Définissons alors la fonction $f : \{0, 1, \dots , N − 1\} → \{0, 1\}
-par : 
+Soit $N$ un entier fixé et soit $k_0$ un entier avec $0 ⩽ k_0 ⩽ N − 1$.
+
+Définissons alors la fonction $f : \{0, 1, \dots , N − 1\} → \{0, 1\}$ par : 
 
 $$
 f(k_0)=1~et~f(k) = 0~pour~tout~k \neq k_0
@@ -60,17 +67,21 @@ Ces deux symétries combinées produisent une rotation qui **amplifie l'amplitud
 
 Nous allons illustrer les étapes avec l'exemple de l'exercice : **$N=3$ qubits**, soit $N=2^3=8$ états possibles. La solution recherchée est $|\omega\rangle = |111\rangle$. Le nombre optimal d'itérations est $k_{opt} \approx \frac{\pi}{4} \sqrt{N} = \frac{\pi}{4} \sqrt{8} \approx 1,57$, que l'on arrondit à $k=2$ itérations.
 
-### 1. 📢 Initialisation des États Quantiques (Superposition)
+### 1. Initialisation des États Quantiques (Superposition)
 
 L'initialisation correspond à l'application d'une porte **Hadamard ($\mathbf{H}$)** sur chaque qubit.
 
 * **Objectif :** Placer tous les états dans une superposition égale, appelée état $\left|s\right\rangle$.
 * **Porte utilisée :** $\mathbf{H}^{\otimes n}$ (Hadamard sur chaque qubit).
 * **Calcul sur 3 Qubits :**
-    $$\left|s\right\rangle = \mathbf{H}^{\otimes 3} \left|000\right\rangle = \frac{1}{\sqrt{8}} \sum_{x=0}^{7} \left|x\right\rangle$$
+
+$$
+    |s\rangle = \mathbf{H}^{\otimes 3} |000\rangle = \frac{1}{\sqrt{8}} \sum_{x=0}^{7} |x\rangle
+$$
+
 * **Amplitude initiale :** Chaque état possède une amplitude de $\frac{1}{\sqrt{8}} \approx 0,35$ (et donc une probabilité de $1/8$, soit 12,5%, d'être mesuré).
 
-### 2. 🔮 L'Oracle de Phase ($\mathbf{U}_\omega$)
+### 2. L'Oracle de Phase ($\mathbf{U}_\omega$)
 
 * **Rôle :** L'Oracle est la "boîte noire" qui connaît la solution $|\omega\rangle$. Il ne change pas l'état, mais applique un **changement de phase** de $-1$ uniquement à l'état solution.
 * **Opération :** $\mathbf{U}_\omega \left|x\right\rangle = (-1)^{f(x)} \left|x\right\rangle$
@@ -191,12 +202,15 @@ Nous allons voir comment le Diffuseur (**$\mathbf{D}$**) affecte la solution rec
 L'amplitude de la solution était négative suite à l'Oracle ($−\frac{1}{\sqrt{8}}$​).
 
 $$
-\begin{matrix}Nouvelle~Amplitude~(|1.0.1\rangle) & = & 2 \times \frac{1}{\sqrt{8}} - (- \frac{1}{\sqrt{8}}) \\
-& = & \frac{2}{\sqrt{8}} + \frac{1}{\sqrt{8}} \\
-& = & + \frac{3}{\sqrt{8}} \\
-& \approx & +1.06
-\end{matrix}
+\begin{aligned}
+\text{Nouvelle Amplitude}(|1.0.1\rangle)
+  &= 2 \times \frac{1}{\sqrt{8}} - \left(- \frac{1}{\sqrt{8}}\right) \\
+  &= \frac{2}{\sqrt{8}} + \frac{1}{\sqrt{8}} \\
+  &= \frac{3}{\sqrt{8}} \\
+  &\approx 1.06
+\end{aligned}
 $$
+
 
 * Résultat : en une seule itération, l'Amplitude est passée de $-0.35$  à **$+1.06$** , **trois fois** plus grande !
 
@@ -205,12 +219,14 @@ $$
 L'amplitude des états non-solutions était positive et non-marquée ($+ \frac{1}{\sqrt{8}} $​).
 
 $$
-\begin{matrix}
-Nouvelle ~ Amplitude & = 2 \times \frac{1}{\sqrt{8}} - (+ \frac{1}{\sqrt{8}}) \\
-& = \frac{2}{\sqrt{8}} - \frac{1}{\sqrt{8}} \\
-& = + \frac{1}{\sqrt{8}} 
-\end{matrix}
+\begin{aligned}
+\text{Nouvelle Amplitude}(|0.1.1\rangle)
+  &= 2 \times \frac{1}{\sqrt{8}} - \left(+ \frac{1}{\sqrt{8}}\right) \\
+  &= \frac{2}{\sqrt{8}} - \frac{1}{\sqrt{8}} \\
+  &= \frac{1}{\sqrt{8}}
+\end{aligned}
 $$
+
 
 * Résultat : L'amplitude des non-solutions est revenue à l'amplitude moyenne initiale, soit $0.35$ (et même légèrement diminuée après avoir normalisé l'état total, car l'amplitude de la solution a dépassé 1).
 
