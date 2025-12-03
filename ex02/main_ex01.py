@@ -14,9 +14,9 @@ SHOTS = 1024
 
 def print_introduction_ex02(backend_name):
     # os.system('cls' if os.name == 'nt' else 'clear')
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("   EXERCICE 02 : BRUIT QUANTIQUE (SUR IBM QUANTUM)")
-    print("="*70)
+    print("=" * 70)
     print("  ** Objectif ** : Exécuter le circuit 'État de Bell (Intrication)' "
           f"sur ordinateur quantique ({backend_name})")
     print("   pour mesurer l'effet du bruit quantique (erreurs).")

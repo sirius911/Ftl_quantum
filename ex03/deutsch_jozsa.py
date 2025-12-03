@@ -148,11 +148,10 @@ def run_deutsch_jozsa(oracle_obj):
     print(f"✅ CONCLUSION: L'Oracle est {conclusion}.")
 
     afficher_resultats(
-            counts,
-            backend_name=backend_name,
-            titre=f"Résultats : {conclusion}",
-            afficher_graphique=True
-        )
+        counts,
+        backend_name=backend_name,
+        titre=f"Résultats : {conclusion}",
+        afficher_graphique=True,)
     return conclusion
 
 

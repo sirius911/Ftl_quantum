@@ -44,7 +44,7 @@ class Base_Oracle:
 
     def get_circuit(self):
         return self._oracle_circuit
-    
+
     def dessine(self):
         figure = self._oracle_circuit.draw(output='mpl', fold=-1)
         figure.suptitle(f"Oracle: {self.name}", fontsize=12)
