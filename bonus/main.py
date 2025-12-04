@@ -191,6 +191,15 @@ if __name__ == "__main__":
         print("Erreur : L'argument M doit être un entier valide.")
         sys.exit(1)
 
+    try:
+        if len(sys.argv) == 3:
+            graphic = (sys.argv[2] == "--graphics")
+        else:
+            graphic = False
+    except Exception:
+        print("Warning: l'argument est --graphics")
+        graphic = False
+
     # 2. Vérification M (doit être un nombre composé)
     if M < 4:
         print("Erreur : M doit être un nombre composé (M >= 4).")
@@ -246,7 +255,7 @@ if __name__ == "__main__":
 
         try:
             # run_shor_qpf retourne la période r (ou 0 en cas d'échec total)
-            r = run_shor_qpf(M, a, nc, nd, simulator)
+            r = run_shor_qpf(M, a, nc, nd, simulator, graphic)
 
             if r > 0:
                 print(f"\n🎉 ALGORITHME DE SHOR TERMINÉ (Tentative {tentative})")

@@ -8,6 +8,7 @@ import numpy as np
 # NOTE: Les imports d'arithmétique avancée (ModularExponentiation, ModularMultiplication)
 # sont omis car ils causent des erreurs d'environnement dans la version actuelle de Qiskit.
 # L'Oracle est traité comme une ABSTRACTION (boîte noire) pour ne pas bloquer l'avancement.
+# Deplus IBM Quantum a diminue les circuits possibles pour Shor
 
 
 class QuantumPeriodFinder:

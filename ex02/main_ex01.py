@@ -79,8 +79,8 @@ try:
 
     # Soumission du job au vrai QPU
     job = sampler.run([compiled_circuit])
-
-    print(f"ID du Job: {job.job_id()}")
+    job_id = job.job_id()
+    print(f"ID du Job: {job_id}")
     print(f"Statut : {job.status()}")
     print("\n--- ATTENTE DES RÉSULTATS ---")
 
@@ -102,6 +102,9 @@ try:
         titre=f"Résultats 'Etat de Bell' — {backend_name}",
         afficher_graphique=True,
     )
+
+except KeyboardInterrupt:
+    print(f"Interruption utilisateur, vous pouvez recuperer les resultats avec le job {job_id}")
 
 except Exception as e:
     print(f"\n❌ ERREUR LORS DE LA SOUMISSION DU JOB: {e}")
