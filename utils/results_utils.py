@@ -106,7 +106,7 @@ def afficher_resultats(
     return probabilities
 
 
-def dessine_circuit(qc: QuantumCircuit, title, save=None):
+def dessine_circuit(qc: QuantumCircuit, title: str, save: str = None):
     """
     Affiche le circuit quantique et le sauvegarde si un nom de fichier est fourni.
 
